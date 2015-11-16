@@ -1,0 +1,4 @@
+/Elastic.Attachments.Index/*.suo
+/logs/*.log
+/logs/log.txt
+/logs/rotated.log.1

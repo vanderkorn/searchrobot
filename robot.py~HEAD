@@ -1,0 +1,18 @@
+#-------------------------------------------------------------------------------
+# Created on 14.12.2011
+# 
+# @author: Van Der Korn
+# @file: sitegoogleparse.py
+#-------------------------------------------------------------------------------
+# -*- coding=utf-8 -*-
+import inject
+from  core.robots.SearchRobot import *
+from  core.robots.Dependencer import *
+host = 'www.drive.com.au'
+count = 100000
+Dependencer.RegisterDependencies()
+
+es = inject.instance(ElasticSearchProvider)
+#es.SetNullImages()
+robot = SearchRobot()
+robot.Index(host, count)

@@ -1,0 +1,58 @@
+sudo apt-get install squid
+sudo apt-get install apache2-utils
+sudo cp  /etc/squid3/squid.conf /etc/squid3/squid2.conf
+sudo rm -f /etc/squid3/squid.conf
+sudo nano /etc/squid3/squid.conf
+===============================================================
+# acls
+### local net
+acl localnet src 10.0.0.0/8     # RFC1918 possible internal network
+acl localnet src 172.16.0.0/12  # RFC1918 possible internal network
+acl localnet src 192.168.0.0/16 # RFC1918 possible internal network
+acl localnet src fc00::/7       # RFC 4193 local private network range
+acl localnet src fe80::/10      # RFC 4291 link-local (directly plugged) machines
+
+### safe ports
+acl SSL_ports port 443
+acl Safe_ports port 80          # http
+acl Safe_ports port 21          # ftp
+acl Safe_ports port 443         # https
+acl Safe_ports port 70          # gopher
+acl Safe_ports port 210         # wais
+acl Safe_ports port 1025-65535  # unregistered ports
+acl Safe_ports port 280         # http-mgmt
+acl Safe_ports port 488         # gss-http
+acl Safe_ports port 591         # filemaker
+acl Safe_ports port 777         # multiling http
+acl CONNECT method CONNECT
+
+#set squid port
+http_port 3128
+
+hierarchy_stoplist cgi-bin ?
+
+forwarded_for delete
+
+# authentification with username and password
+auth_param basic program /usr/lib/squid3/basic_ncsa_auth /etc/squid3/passwords
+acl foo proxy_auth REQUIRED
+http_access allow foo
+
+## disable ident lookup
+ident_lookup_access deny all
+
+# last rule to block all without other valid rule
+http_access deny all
+
+===========================================================================
+sudo htpasswd -c /etc/squid3/passwords gogi7890
+
+vfrkfel490
+===========================================================================
+
+sudo chmod 0644 /etc/squid3/passwords
+sudo chown proxy:proxy /etc/squid3/passwords
+sudo service squid3 -k parse
+sudo service squid3 restart
+sudo service squid3 status
+
